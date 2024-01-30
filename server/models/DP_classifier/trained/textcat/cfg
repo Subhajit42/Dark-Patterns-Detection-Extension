@@ -1,0 +1,13 @@
+{
+  "labels":[
+    "Urgency",
+    "Scarcity",
+    "Misdirection",
+    "Social Proof",
+    "Obstruction",
+    "Sneaking",
+    "Forced Action"
+  ],
+  "threshold":0.0,
+  "positive_label":null
+}

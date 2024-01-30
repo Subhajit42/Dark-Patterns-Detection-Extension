@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .hidden {
+            display: none;
+        }
+        .shown {
+            display: block;
+        }
+        .centered-form {
+            position: absolute; /* Position relative to the viewport */
+            top: 50%; /* Push the div down half of its height */
+            left: 50%; /* Push the div left half of its width */
+            transform: translate(-50%, -50%); /* Center the div within the viewport */
+            width: 400px; /* Adjust width as needed */
+            background-color: #f5f5f5; /* Light gray background */
+            border-radius: 10px; /* Rounded corners */
+            padding: 30px; /* Padding for content */
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3); /* Soft shadow */
+        }
+        body {
+            content: "";
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
+            left: 0px;
+  
+            background-image: url('https://c8.alamy.com/comp/KMMHGF/back-to-school-seamless-pattern-with-hand-drawn-doodles-sketch-element-KMMHGF.jpg');
+            opacity: 0.2;
+        }
+
+
+
+
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
+        
+        function valueChanges() {
+            let others = document.getElementById('otherCategory');
+            let options = document.getElementById('selectCategory');
+            console.log("called")
+            if (options.value == "Other") {
+                others.classList.add("shown")
+                others.classList.remove("hidden")
+            }
+            else {
+                others.classList.add("hidden")
+                others.classList.remove("shown")
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById("selectCategory").addEventListener('change',valueChanges);
+            valueChanges(); 
+        });
+
+        document.addEventListener("DOMContentLoaded",()=>{
+            var form = document.getElementById("form");
+            form.addEventListener('submit', handleForm);
+        })
+      
+        function handleForm(event) { 
+            const selectCategory = document.getElementById("selectCategory").value;
+            event.preventDefault();
+            if (selectCategory === ""){
+                alert("Please select a category.");
+                return false;
+            }
+            onSubmit();
+        }
+
+        function onSubmit(){
+            otherCategoryHandler = document.getElementById("selectCategory").value
+            fetch("http://127.0.0.1:5000/submit-form",{
+                method: "post",
+                headers: {
+                'Content-Type': 'application/json'
+                },
+
+                body: JSON.stringify({
+                    name: document.getElementById("name").value,
+                    email: document.getElementById("email").value,
+                    dpText: document.getElementById("dp").value,
+                    category: otherCategoryHandler == "Other" ? document.getElementById("otherInput").value : otherCategoryHandler
+                })
+            }).then(response => response.json())
+            .then(data => {
+                console.log(data);
+                window.location.href = "http://127.0.0.1:5000/thankyou";
+            });
+        }
+    </script>
+</head>
+<body>
+    
+    <div class="centered-form">
+        <h1>Feedback Form</h1>
+        <form class="col gy-2 gx-3 align-items-center" id="form" action="http://127.0.0.1:5000/submit-form" method="POST">
+            <div class="col-auto">
+              <div class="mb-4">
+                <label class="form-label" for="name">Name</label>
+                <input type="text" class="form-control" id="name" placeholder="Jane Doe" required>
+              </div>
+            </div>
+            <div class="col-auto">
+                <div class="mb-4">
+                    <label for="email" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="email" placeholder="abc123@xyz.com" required>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="mb-4">
+                  <label class="form-label" for="dp">Suspected Dark Pattern</label>
+                  <textarea class="form-control" id="dp" placeholder="Dark Pattern" required></textarea>
+                </div>
+            </div>
+            <div class="col-auto mb-4">
+              <label class="form-label" for="selectCategory">Category</label>
+              <select class="form-select" id="selectCategory">
+                <option value="">Choose...</option>
+                <option value="NULL">Not Sure</option>
+                <option value="Urgency">Urgency</option>
+                <option value="Scarcity">Scarcity</option>
+                <option value="Misdirection">Misdirection</option>
+                <option value="Forced Action">Forced Action</option>
+                <option value="socialProof">Social Proof</option>
+                <option value="Obstruction">Obstruction</option>
+                <option value="Sneaking">Sneaking</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="col-auto">
+                <div class="mb-4" id="otherCategory">
+                  <label class="visually-hidden" for="otherInput">Others</label>
+                  <input type="text" class="form-control" id="otherInput" placeholder="Enter Category Here">
+                </div>
+            </div> 
+            <div class="d-grid gap-2">
+                <input class="btn btn-primary" type="submit" id="submit">
+            </div>
+          </form>
+    </div>
+    
+</body>
+</html>
