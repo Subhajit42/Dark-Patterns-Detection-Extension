@@ -14,7 +14,7 @@ function highlightContent(textsObj) {
         const wrapper = document.createElement('span');
         wrapper.classList.add('dp-checker');
         range.surroundContents(wrapper);
-        wrapper.setAttribute("style", `border: solid ${colorScheme[key]} 2px`);
+        wrapper.setAttribute("style", `border: solid ${colorScheme[key]} 3px`);
         wrapper.setAttribute("title", `${key}`);
       }
     }
@@ -36,27 +36,23 @@ const colorScheme = {
   "Forced Action": "red",
   "Misdirection" : "orange",
   "Obstruction" : "gray",
-  "Scarcity" : "yellow",
+  "Scarcity" : "aqua",
   "Sneaking" : "purple",
   "Social Proof" : "blue",
   "Urgency" : "pink"
 };
 
-document.addEventListener("contextmenu", () => {
-        const i = fetch("http://127.0.0.1:5000/",{
+document.addEventListener("keydown",(event) => {
+  if (event.key === 'D' || event.key === 'd'){
+      // Perform the highlighting logic here
+      const i = fetch("http://127.0.0.1:5000/", {
           method: "POST",
-          body: JSON.stringify(
-            {"URL": url_}
-            ),
-          headers: {
-            "Content-type": "application/json; charset=UTF-8"
-          }
-          }).then(
-            (response)=>response.text()
-          ).then( 
-            (text)=>{
-              console.log(text)
-              highlightContent(JSON.parse(text));             
-            }
-        )
-})
+          body: JSON.stringify({ "URL": url_ }),
+          headers: { "Content-type": "application/json; charset=UTF-8" }
+      }).then((response) => response.text()).then((text) => {
+          console.log(text);
+          highlightContent(JSON.parse(text));
+      });
+    }
+   
+});
