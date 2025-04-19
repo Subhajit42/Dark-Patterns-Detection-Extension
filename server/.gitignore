@@ -1,2 +1,5 @@
 ScrapedData.csv
 FeedbackData.csv
+venv/
+.env/
+*.env
